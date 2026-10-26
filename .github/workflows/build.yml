@@ -17,19 +17,6 @@ jobs:
         with:
           distribution: temurin
           java-version: 21
-      - name: Probe plugin versions
-        shell: bash
-        run: |
-          set +e
-          out=""
-          for u in https://maven.legacyfabric.net/legacy-looming/legacy-looming.gradle.plugin/maven-metadata.xml \
-                   https://meta.legacyfabric.net/v2/versions/loader/1.8.9 \
-                   https://legacyfabric.net/ \
-                   https://maven.ornithemc.net/releases/net/ornithemc/ploceus/maven-metadata.xml; do
-            res=$(curl -sL -o m.xml -w '%{http_code}' "$u")
-            out="$out$u -> $res : $(head -c 150 m.xml | tr -d '\n<>')%0A"
-          done
-          echo "::notice title=Plugin versions::$out"
       - name: Build
         working-directory: mod
         shell: bash
