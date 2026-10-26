@@ -236,21 +236,46 @@ async function installFabric(v, progress) {
   return profile.id;
 }
 
-/** Αντιγράφει το Silent Client mod (το .jar από το resources/mods) στο mods του παιχνιδιού. */
+const RELEASES_API = 'https://api.github.com/repos/Geochanel1/silent-client/releases?per_page=30';
+const MOD_JAR = /^silentclient-[\d.]+\.jar$/;
+
+/** Βρίσκει το πιο πρόσφατο Silent Client mod στις εκδόσεις μας και το κατεβάζει. */
+async function downloadLatestMod(dest) {
+  const res = await fetch(RELEASES_API, { headers: { Accept: 'application/vnd.github+json' } });
+  if (!res.ok) throw new Error(`Δεν βρέθηκε το Silent Client mod (HTTP ${res.status}). Δοκίμασε ξανά σε λίγο.`);
+  for (const release of await res.json()) {
+    const asset = (release.assets || []).find((a) => MOD_JAR.test(a.name));
+    if (asset) {
+      await download(asset.browser_download_url, path.join(dest, asset.name));
+      return asset.name;
+    }
+  }
+  throw new Error('Το Silent Client mod δεν έχει κυκλοφορήσει ακόμα. Δοκίμασε ξανά σε λίγο.');
+}
+
+/**
+ * Βάζει το Silent Client mod στον φάκελο mods του παιχνιδιού.
+ * Πρώτα από όσα ήρθαν μαζί με τον launcher, αλλιώς το πιο πρόσφατο από το internet.
+ */
 async function syncMod() {
   const src = modsSourceDir();
   const dest = path.join(config.gameDir(), 'mods');
   await fsp.mkdir(dest, { recursive: true });
-  let files = [];
-  try { files = (await fsp.readdir(src)).filter((f) => f.endsWith('.jar')); } catch { /* κανένα */ }
-  if (!files.length) {
-    throw new Error('Δεν βρέθηκε το silentclient .jar στο launcher/resources/mods. Κάνε build το mod πρώτα (δες README).');
+  let bundled = [];
+  try { bundled = (await fsp.readdir(src)).filter((f) => MOD_JAR.test(f)); } catch { /* κανένα */ }
+
+  const existing = (await fsp.readdir(dest)).filter((f) => f.startsWith('silentclient') && f.endsWith('.jar'));
+  if (bundled.length) {
+    for (const f of existing) await fsp.unlink(path.join(dest, f));
+    for (const f of bundled) await fsp.copyFile(path.join(src, f), path.join(dest, f));
+    return;
   }
-  // σβήνουμε παλιές εκδόσεις του Silent mod
-  for (const f of await fsp.readdir(dest)) {
-    if (f.startsWith('silentclient') && f.endsWith('.jar')) await fsp.unlink(path.join(dest, f));
+  try {
+    const name = await downloadLatestMod(dest);
+    for (const f of existing) if (f !== name) await fsp.unlink(path.join(dest, f));
+  } catch (e) {
+    if (!existing.length) throw e; // χωρίς internet παίζουμε με ό,τι υπάρχει ήδη
   }
-  for (const f of files) await fsp.copyFile(path.join(src, f), path.join(dest, f));
 }
 
 // ---------------------------------------------------------------- state
