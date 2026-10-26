@@ -23,12 +23,11 @@ jobs:
           set +e
           out=""
           for u in https://maven.legacyfabric.net/legacy-looming/legacy-looming.gradle.plugin/maven-metadata.xml \
-                   https://maven.legacyfabric.net/net/legacyfabric/legacy-looming/maven-metadata.xml \
-                   https://repo.legacyfabric.net/legacy-looming/legacy-looming.gradle.plugin/maven-metadata.xml \
-                   https://repo.legacyfabric.net/repository/legacyfabric/legacy-looming/legacy-looming.gradle.plugin/maven-metadata.xml; do
-            res=$(curl -sL -o m.xml -w '%{http_code} %{url_effective}' "$u")
-            v=$(grep -o '<version>[^<]*</version>' m.xml | sed 's/<[^>]*>//g' | tail -15 | tr '\n' ' ')
-            out="$out$u -> $res : $v%0A"
+                   https://meta.legacyfabric.net/v2/versions/loader/1.8.9 \
+                   https://legacyfabric.net/ \
+                   https://maven.ornithemc.net/releases/net/ornithemc/ploceus/maven-metadata.xml; do
+            res=$(curl -sL -o m.xml -w '%{http_code}' "$u")
+            out="$out$u -> $res : $(head -c 150 m.xml | tr -d '\n<>')%0A"
           done
           echo "::notice title=Plugin versions::$out"
       - name: Build
