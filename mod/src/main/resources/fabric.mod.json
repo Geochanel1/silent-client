@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "id": "silentclient",
+  "version": "${version}",
+  "name": "Silent Client",
+  "description": "PvP & performance client for Minecraft 1.8.9",
+  "authors": ["Silent Client Team"],
+  "license": "All-Rights-Reserved",
+  "icon": "assets/silentclient/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "client": ["net.silentclient.SilentClient"]
+  },
+  "mixins": ["silentclient.mixins.json"],
+  "depends": {
+    "fabricloader": ">=0.16.0",
+    "minecraft": "1.8.9"
+  }
+}

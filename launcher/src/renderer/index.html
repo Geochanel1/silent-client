@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="el">
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; img-src 'self' https://mc-heads.net data:; style-src 'self'; script-src 'self'" />
+  <title>Silent Client</title>
+  <link rel="icon" href="img/logo.png" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="titlebar">
+    <div class="brand"><img class="logo-mark" src="img/logo.png" alt="" /><span>SILENT</span><b>CLIENT</b></div>
+    <div class="window-buttons">
+      <button id="btn-min" title="Ελαχιστοποίηση">&#8211;</button>
+      <button id="btn-close" class="close" title="Κλείσιμο">&#10005;</button>
+    </div>
+  </header>
+
+  <div class="layout">
+    <nav class="sidebar">
+      <button class="nav active" data-view="home"><span class="ico">&#9654;</span>Play</button>
+      <button class="nav" data-view="versions"><span class="ico">&#9638;</span>Versions</button>
+      <button class="nav" data-view="cosmetics"><span class="ico">&#10022;</span>Cosmetics</button>
+      <button class="nav" data-view="settings"><span class="ico">&#9881;</span>Settings</button>
+
+      <div class="account" id="account">
+        <img id="acc-head" alt="" />
+        <div class="acc-text">
+          <div id="acc-name">Δεν έχεις συνδεθεί</div>
+          <button id="acc-action" class="link">Σύνδεση με Microsoft</button>
+        </div>
+      </div>
+    </nav>
+
+    <main>
+      <!-- HOME -->
+      <section class="view active" id="view-home">
+        <div class="hero">
+          <div class="hero-glow"></div>
+          <p class="eyebrow">Minecraft PvP Client</p>
+          <h1>SILENT<span>CLIENT</span></h1>
+          <p class="sub">Περισσότερα FPS, καθαρό HUD και δωρεάν cosmetics.</p>
+
+          <div class="launch-row">
+            <button class="version-pill" id="version-pill">
+              <small>Έκδοση</small><strong id="pill-name">1.8.9</strong>
+            </button>
+            <button class="play" id="play-btn">INSTALL</button>
+          </div>
+
+          <div class="progress hidden" id="progress">
+            <div class="progress-text"><span id="progress-stage"></span><span id="progress-pct"></span></div>
+            <div class="bar"><div id="progress-fill"></div></div>
+          </div>
+          <p class="error hidden" id="error"></p>
+        </div>
+
+        <div class="cards">
+          <div class="card">
+            <h3>Right Shift μενού</h3>
+            <p>Μέσα στο παιχνίδι πάτα <kbd>Right Shift</kbd> για όλα τα mods και τον HUD Editor.</p>
+          </div>
+          <div class="card">
+            <h3>Φάση 1</h3>
+            <p>FPS, CPS, Keystrokes, Coords, Armor, Potions, Toggle Sprint/Sneak, Fullbright και άλλα.</p>
+          </div>
+          <div class="card">
+            <h3>Επόμενα</h3>
+            <p>Δωρεάν cosmetics, 1.21.x με Fabric, minimap, waypoints, replay.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- VERSIONS -->
+      <section class="view" id="view-versions">
+        <h2>Εκδόσεις</h2>
+        <p class="muted">Διάλεξε έκδοση. Κάθε έκδοση χρειάζεται Install μία φορά πριν παίξεις.</p>
+        <div class="version-grid" id="version-grid"></div>
+      </section>
+
+      <!-- COSMETICS -->
+      <section class="view" id="view-cosmetics">
+        <h2>Cosmetics</h2>
+        <p class="muted">Όλα δωρεάν. Θα τα βλέπουν όλοι οι παίκτες του Silent Client. Έρχονται στη Φάση 2.</p>
+        <div class="cosmetic-grid">
+          <div class="cosmetic"><div class="c-ico">&#9873;</div>Capes</div>
+          <div class="cosmetic"><div class="c-ico">&#10070;</div>Wings</div>
+          <div class="cosmetic"><div class="c-ico">&#9635;</div>Backpacks</div>
+          <div class="cosmetic"><div class="c-ico">&#9960;</div>Shields</div>
+          <div class="cosmetic"><div class="c-ico">&#9650;</div>Hats</div>
+          <div class="cosmetic"><div class="c-ico">&#9786;</div>Emotes</div>
+        </div>
+      </section>
+
+      <!-- SETTINGS -->
+      <section class="view" id="view-settings">
+        <h2>Ρυθμίσεις</h2>
+        <div class="setting">
+          <label>Μνήμη (RAM) <span id="ram-value"></span></label>
+          <input type="range" id="ram" min="1024" max="8192" step="256" />
+        </div>
+        <div class="setting">
+          <label>Κλείσιμο launcher όταν ξεκινά το παιχνίδι</label>
+          <input type="checkbox" id="close-on-launch" />
+        </div>
+        <div class="setting">
+          <label>Φάκελος παιχνιδιού</label>
+          <code id="game-dir"></code>
+        </div>
+        <div class="setting column">
+          <label>Azure Client ID <span class="muted">(για το Microsoft login, δες README)</span></label>
+          <input type="text" id="client-id" placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" spellcheck="false" />
+        </div>
+        <button class="secondary" id="save-settings">Αποθήκευση</button>
+        <span class="saved hidden" id="saved">Αποθηκεύτηκε</span>
+
+        <h3 class="log-title">Game log</h3>
+        <pre class="log" id="log"></pre>
+      </section>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
