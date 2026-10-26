@@ -20,6 +20,7 @@ jobs:
       - name: Probe plugin versions
         shell: bash
         run: |
+          set +e
           out=""
           for u in https://maven.legacyfabric.net/legacy-looming/legacy-looming.gradle.plugin/maven-metadata.xml \
                    https://maven.legacyfabric.net/net/legacyfabric/legacy-looming/maven-metadata.xml \
